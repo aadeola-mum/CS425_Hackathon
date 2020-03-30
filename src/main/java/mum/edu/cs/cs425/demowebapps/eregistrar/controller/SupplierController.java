@@ -24,8 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import mum.edu.cs.cs425.demowebapps.eregistrar.model.Student;
-import mum.edu.cs.cs425.demowebapps.eregistrar.service.StudentService;
+import mum.edu.cs.cs425.demowebapps.eregistrar.model.Supplier;
+import mum.edu.cs.cs425.demowebapps.eregistrar.service.SupplierService;
+
 
 /**
  * @author Adeola Adeleke
@@ -33,79 +34,79 @@ import mum.edu.cs.cs425.demowebapps.eregistrar.service.StudentService;
  */
 
 @Controller
-@RequestMapping(value = "/students")
-public class StudentController {
+@RequestMapping(value = "/suppliers")
+public class SupplierController {
 	
-	private StudentService studentService;
+	private SupplierService supplierService;
 	
 	/**
-	 * @param studentService
+	 * @param supplierService
 	 */
 	@Autowired
-	public StudentController(StudentService studentService) {
+	public SupplierController(SupplierService supplierService) {
 		//super();
-		this.studentService = studentService;
+		this.supplierService = supplierService;
 	}
 
-	@GetMapping(value= {"/", "/list"})
+	@GetMapping(value= { "/list"})
 	public ModelAndView list() {
         ModelAndView modelAndView = new ModelAndView();
-        List<Student> studs = studentService.getAll();
+        List<Supplier> studs = supplierService.getAll();
        // System.err.println(studs);
-        modelAndView.addObject("students", studs);
-        modelAndView.addObject("studentCount", studs.size());
-        modelAndView.setViewName("students/list");
+        modelAndView.addObject("suppliers", studs);
+        modelAndView.addObject("supplierCount", studs.size());
+        modelAndView.setViewName("suppliers/list");
         return modelAndView;
     }
 	
 	@GetMapping(value= {"/new"})
 	public ModelAndView add() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("student", new Student());
-        modelAndView.setViewName("students/new");
+        modelAndView.addObject("supplier", new Supplier());
+        modelAndView.setViewName("suppliers/new");
         return modelAndView;
     }
 	
-	@GetMapping(value= {"/edit/{studentId}"})
-	public ModelAndView edit(@PathVariable("studentId") long studentId) {
+	@GetMapping(value= {"/edit/{supplierId}"})
+	public ModelAndView edit(@PathVariable("supplierId") long supplierId) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("student", studentService.get(studentId).orElse(new Student()));
-        modelAndView.setViewName("students/new");
+        modelAndView.addObject("supplier", supplierService.get(supplierId).orElse(new Supplier()));
+        modelAndView.setViewName("suppliers/new");
         return modelAndView;
     }
 	
 	@PostMapping(value= {"/save"})
-	public String saveStudent(@Valid @ModelAttribute("student") Student student,
+	public String saveSupplier(@Valid @ModelAttribute("supplier") Supplier supplier,
             BindingResult bindingResult, Model model) throws Exception {
-		System.err.println(student);
+		System.err.println(supplier);
 		if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "students/new";
+            return "suppliers/new";
         }
 		
-        Student savedStudent = studentService.saveStudent(student);
-        if(savedStudent != null) {
-        	return "redirect:/students/list";
+        Supplier savedSupplier = supplierService.saveSupplier(supplier);
+        if(savedSupplier != null) {
+        	return "redirect:/suppliers/list";
         }
-        return "students/new";
+        return "suppliers/new";
     }
 	
-	@GetMapping(value= {"/del/{studentId}"})
-	public String delete(@PathVariable("studentId") long studentId) {
-		System.err.println("del entered studentId: "+studentId);
-		studentService.delete(studentId);
-		return "redirect:/students/list";
+	@GetMapping(value= {"/del/{supplierId}"})
+	public String delete(@PathVariable("supplierId") long supplierId) {
+		System.err.println("del entered supplierId: "+supplierId);
+		supplierService.delete(supplierId);
+		return "redirect:/suppliers/list";
 	}
 	
 	@PostMapping(value= {"/search"})
 	public ModelAndView searchlist(@NotEmpty @NotNull @NotBlank @RequestParam("searchText") String searchText) {
         ModelAndView modelAndView = new ModelAndView();
-        List<Student> studs = studentService.search(searchText);
+        List<Supplier> studs = supplierService.search(searchText);
        // System.err.println(studs);
         modelAndView.addObject("searchText", searchText);
-        modelAndView.addObject("students", studs);
-        modelAndView.addObject("studentCount", studs.size());
-        modelAndView.setViewName("students/list");
+        modelAndView.addObject("suppliers", studs);
+        modelAndView.addObject("supplierCount", studs.size());
+        modelAndView.setViewName("suppliers/list");
         return modelAndView;
     }
 }
