@@ -1,2 +1,2 @@
-# eRegistrar
-Add Student, View, Edit, Eelete and Search  Students functionalities
+# CS425 Hackathon
+Product & Supplier functionalities using Spring MVC
